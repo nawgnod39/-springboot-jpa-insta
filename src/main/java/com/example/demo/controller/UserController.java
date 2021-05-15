@@ -19,27 +19,27 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.MyUserDetail;
 @Controller
 public class UserController {
-
+	
 	private static final Logger log = LoggerFactory.getLogger(UserController.class);
-
 	@Autowired
 	private BCryptPasswordEncoder encoder;
-
+	
 	@Autowired
 	private UserRepository mUserRepository;
+	
 	@Autowired
 	private FollowRepository mFollowRepository;
-
+	
 	@GetMapping("/auth/login")
 	public String authLogin() {
 		return "auth/login";
 	}
-
+	
 	@GetMapping("/auth/join")
 	public String authJoin() {
 		return "auth/join";
 	}
-
+	
 	@PostMapping("/auth/joinProc")
 	public String authJoinProc(User user) {
 		String rawPassword = user.getPassword();
@@ -47,9 +47,8 @@ public class UserController {
 		user.setPassword(encPassword);
 		log.info("rawPassword : "+rawPassword);
 		log.info("encPassword : "+encPassword);
-
 		mUserRepository.save(user);
-
+		
 		return "redirect:/auth/login";
 	}
 	
@@ -58,7 +57,7 @@ public class UserController {
 			@PathVariable int id,
 			@AuthenticationPrincipal MyUserDetail userDetail,
 			Model model) {
-
+		
 		/**
 		 *   1. imageCount
 		 *   2. followerCount
@@ -66,20 +65,30 @@ public class UserController {
 		 *   4. User 오브젝트 (Image (likeCount) 컬렉션)
 		 *   5. followCheck 팔로우 유무 (1 팔로우, 1이 아니면 언팔로우)
 		 */
-
+		
 		// 4번 임시(수정해야함)
 		Optional<User> oUser = mUserRepository.findById(id);
 		User user = oUser.get();
 		model.addAttribute("user", user);
-
+		
 		// 5번
 		User principal = userDetail.getUser();
-
+		
 		int followCheck = mFollowRepository.countByFromUserIdAndToUserId(principal.getId(), id);
 		log.info("followCheck : "+followCheck);
 		model.addAttribute("followCheck", followCheck);
-
+		
 		return "user/profile";
 	}
+
+	@GetMapping("/user/edit/{id}")
+	public String userEdit(@PathVariable int id) {
+
+		// 해당 id로 Select 하기
+		// findByUserInfo() 사용 (만들어야 함)
+
+		return "user/profile_edit";
+	}
+
 
 }
