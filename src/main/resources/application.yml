@@ -1,33 +1,35 @@
 server:
-  port: 8000                                                                                                                                                                                                                                                                        
+  port: 8080
   servlet:
     context-path: /
-
-# 5.7 com.mysql.jdbc.Driver
-# 5.7 jdbc:mysql://localhost:3306/cos   
-# jdbc:mysql://localhost:3306/cos?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
-
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+    
 spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+      
   datasource:
-    url: jdbc:mysql://localhost:3306/insta?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/insta?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
     username: insta
     password: qwe125678
     
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      use-new-id-generator-mappings: false
     show-sql: true
     properties:
-      hibernate.enable_lazy_load_no_trans: true
-    
-  mvc:
-    view:
-      prefix: /WEB-INF/views/
-      suffix: .jsp
+      hibernate.enable_lazy_load_no_trans: true  
+      hibernate.format_sql: true
       
   servlet:
     multipart:
@@ -37,13 +39,7 @@ spring:
   security:
     user:
       name: test
-      password: 1234
-      
-  http:
-      charset: UTF-8
-      enabled: true
-      force: true 
-  
+      password: 1234 
 
 file:
   path: C:\workspace\insta\src\main\resources/upload/
